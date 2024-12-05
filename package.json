@@ -1,0 +1,16 @@
+{
+  "name": "portfolio-project",
+  "version": "1.0.0",
+  "description": "My Portfolio Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.17.1",
+    "nodemailer": "^6.4.16",
+    "portfolio-project": "file:"
+  }
+}
