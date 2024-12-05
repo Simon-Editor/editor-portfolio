@@ -2,7 +2,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const router = express.Router();
 require('dotenv').config();  // Ensure environment variables are loaded
-
+const { sendEmail } = require('./email'); // Adjust the path as needed
 // Setup nodemailer transport using Gmail
 const transporter = nodemailer.createTransport({
     service: 'gmail',
