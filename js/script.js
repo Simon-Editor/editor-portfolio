@@ -177,3 +177,35 @@ setTimeout(() => {
     successPopup.classList.remove('fade-out');
   }, 500); // Match the duration of the CSS transition
 }, 3000);
+
+
+// Initialize EmailJS
+(function () {
+  emailjs.init('tFBG7KYodaSQeWyt1'); // Replace with your actual EmailJS Public Key
+})();
+
+// Add event listener to the contact form
+document.getElementById('contactForm').addEventListener('submit', function (event) {
+  event.preventDefault(); // Prevent the form from reloading the page
+
+  // Get references to success and error messages
+  const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+
+  // Send the form using EmailJS
+  emailjs
+    .sendForm('service_qgrlu8n', 'template_95s9ood', this, 'tFBG7KYodaSQeWyt1')
+    .then(
+      function (response) {
+        console.log('SUCCESS!', response.status, response.text);
+        successMessage.classList.remove('hidden'); // Show success message
+        errorMessage.classList.add('hidden'); // Hide error message
+        document.getElementById('contactForm').reset(); // Reset form fields
+      },
+      function (error) {
+        console.error('FAILED...', error);
+        errorMessage.classList.remove('hidden'); // Show error message
+        successMessage.classList.add('hidden'); // Hide success message
+      }
+    );
+});

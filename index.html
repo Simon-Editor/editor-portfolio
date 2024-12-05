@@ -225,12 +225,12 @@
                     <form id="contact-form" action="http://localhost:3000/submit-form" method="POST">
                         <div class="form-inputs">
                             <label for="name">Name:</label>
-                            <input type="text" name="from_name" id="name" class="input-field" placeholder="Enter your name" required>
+                            <input type="text" name="from_name" id="from_name" class="input-field" placeholder="Enter your name" required>
                         </div>
                         
                         <div class="form-inputs">
                             <label for="email">Email:</label>
-                            <input type="email" name="reply_to" id="email" class="input-field" placeholder="Enter your email" required>
+                            <input type="email" name="reply_to" id="reply_to" class="input-field" placeholder="Enter your email" required>
                         </div>
                         
                         <div class="text-area">
@@ -330,33 +330,6 @@
 
      <!-- EmailJS Script -->
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script>
-    (function () {
-      emailjs.init('tFBG7KYodaSQeWyt1'); // Replace with your EmailJS public key
-    })();
-
-    document.getElementById('contactForm').addEventListener('submit', function (event) {
-      event.preventDefault(); // Prevent the form from submitting normally
-
-      const successMessage = document.getElementById('successMessage');
-      const errorMessage = document.getElementById('errorMessage');
-
-      emailjs
-        .sendForm('service_qgrlu8n', 'template_95s9ood', this, 'tFBG7KYodaSQeWyt1')
-        .then(
-          function (response) {
-            console.log('SUCCESS!', response.status, response.text);
-            successMessage.classList.remove('hidden'); // Show success message
-            errorMessage.classList.add('hidden'); // Hide error message
-            document.getElementById('contactForm').reset(); // Reset form fields
-          },
-          function (error) {
-            console.error('FAILED...', error);
-            errorMessage.classList.remove('hidden'); // Show error message
-            successMessage.classList.add('hidden'); // Hide success message
-          }
-        );
-    });
-  </script>
+  
 </body>
 </html>
