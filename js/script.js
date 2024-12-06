@@ -106,106 +106,58 @@ function scrollActive() {
 window.addEventListener("scroll", scrollActive);
 
 /* ----- HANDLE CONTACT FORM SUBMISSION ----- */
-document.addEventListener('DOMContentLoaded', () => {
-  const sendButton = document.querySelector('#sendButton');
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize EmailJS
+  (function () {
+    emailjs.init("0ZSQiz7mddhkqaZZg"); // Replace with your actual EmailJS Public Key
+  })();
 
-  if (sendButton) {
-    sendButton.addEventListener('click', (e) => {
-      e.preventDefault();
+  const contactForm = document.getElementById("contactForm");
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the form from reloading the page
 
       // Get form input values
-      const name = document.querySelector('#name').value.trim();
-      const email = document.querySelector('#email').value.trim();
-      const message = document.querySelector('#message').value.trim();
+      const name = document.querySelector("#from_name").value.trim();
+      const email = document.querySelector("#reply_to").value.trim();
+      const message = document.querySelector("#message").value.trim();
 
       // Select popup elements
-      const successPopup = document.getElementById('successPopup');
-      const errorPopup = document.getElementById('errorPopup');
-
-      
+      const successPopup = document.getElementById("successMessage");
+      const errorPopup = document.getElementById("errorMessage");
 
       // Validation: Check if fields are empty
       if (!name || !email || !message) {
-        // Show the error popup
-        errorPopup.style.display = 'block';
-
-        // Automatically hide the error popup after 3 seconds
+        errorPopup.style.display = "block"; // Show error popup
         setTimeout(() => {
-          errorPopup.style.display = 'none';
+          errorPopup.style.display = "none"; // Hide after 3 seconds
         }, 3000);
         return; // Stop further execution if validation fails
       }
 
-      // Send the form data to the correct backend route
-      fetch('http://localhost:3000/submit-form', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, message }),
-      })
-        .then((response) => {
-          if (response.ok) {
-            // Show the success popup
-            successPopup.style.display = 'block';
-
-            // Automatically hide the success popup after 3 seconds
+      // Send the form using EmailJS
+      emailjs
+        .sendForm("service_qgrlu8n", "template_95s9ood", this, "0ZSQiz7mddhkqaZZg")
+        .then(
+          function (response) {
+            console.log("SUCCESS via EmailJS!", response.status, response.text);
+            successPopup.style.display = "block"; // Show success popup
             setTimeout(() => {
-              successPopup.style.display = 'none';
+              successPopup.style.display = "none"; // Hide after 3 seconds
             }, 3000);
-          } else {
-            response.text().then((err) => {
-              console.error(`Error: ${err}`);
-            });
+            contactForm.reset(); // Reset form fields
+          },
+          function (error) {
+            console.error("FAILED via EmailJS...", error);
+            errorPopup.style.display = "block"; // Show error popup
+            setTimeout(() => {
+              errorPopup.style.display = "none"; // Hide after 3 seconds
+            }, 3000);
           }
-        })
-        .catch(() => {
-          console.error('There was a network error. Please try again.');
-        });
+        );
     });
   } else {
-    console.error('#sendButton element not found');
+    console.error("#contactForm element not found");
   }
-});
-
-
-// Add a fade-out class before hiding it
-setTimeout(() => {
-  successPopup.classList.add('fade-out');
-  setTimeout(() => {
-    successPopup.style.display = 'none';
-    successPopup.classList.remove('fade-out');
-  }, 500); // Match the duration of the CSS transition
-}, 3000);
-
-
-// Initialize EmailJS
-(function () {
-  emailjs.init('tFBG7KYodaSQeWyt1'); // Replace with your actual EmailJS Public Key
-})();
-
-// Add event listener to the contact form
-document.getElementById('contactForm').addEventListener('submit', function (event) {
-  event.preventDefault(); // Prevent the form from reloading the page
-
-  // Get references to success and error messages
-  const successMessage = document.getElementById('successMessage');
-  const errorMessage = document.getElementById('errorMessage');
-
-  // Send the form using EmailJS
-  emailjs
-    .sendForm('service_qgrlu8n', 'template_95s9ood', this, 'tFBG7KYodaSQeWyt1')
-    .then(
-      function (response) {
-        console.log('SUCCESS!', response.status, response.text);
-        successMessage.classList.remove('hidden'); // Show success message
-        errorMessage.classList.add('hidden'); // Hide error message
-        document.getElementById('contactForm').reset(); // Reset form fields
-      },
-      function (error) {
-        console.error('FAILED...', error);
-        errorMessage.classList.remove('hidden'); // Show error message
-        successMessage.classList.add('hidden'); // Hide success message
-      }
-    );
 });
